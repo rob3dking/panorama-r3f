@@ -20,3 +20,5 @@ export const App = () => {
 
 useTexture.preload('./mark.png');
 useTexture.preload('./mark-ao.png');
+useTexture.preload('./pano/1.jpg');
+useTexture.preload('./pano/2.jpg');

@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useFrame, useLoader, useThree } from "@react-three/fiber";
 
 export const PanoRoom = (props) => {
+    const [roomIndex, setRoomIndex] = useState(0);
     const [triggerTranslate, setTriggerTranslate] = useState(false);
     const [targetPosition, setTargetPosition] = useState(new THREE.Vector3());
     const [hoveredPlane, setHoveredPlane] = useState(false);
@@ -10,9 +11,21 @@ export const PanoRoom = (props) => {
 
     const {scene, gl, camera, raycaster} = useThree();
 
-    const texture = useLoader( THREE.TextureLoader, './image.jpg');
-    texture.flipY = -1;
-    texture.mapping = THREE.EquirectangularReflectionMapping;
+    const [texture1, texture2] = useLoader( THREE.TextureLoader, ['./pano/1.jpg', './pano/2.jpg']);
+    
+    if (texture1) {
+        texture1.flipY = -1;
+        texture1.mapping = THREE.EquirectangularReflectionMapping;
+    }
+
+    if (texture2) {
+        texture2.flipY = -1;
+        texture2.mapping = THREE.EquirectangularReflectionMapping;
+    }
+    
+
+
+    console.log(THREE.EquirectangularReflectionMapping);
 
     const roomRef = useRef();
     const planeRef = useRef();
@@ -71,18 +84,27 @@ export const PanoRoom = (props) => {
         }
 
         if (triggerTranslate) {
-            roomRef.current.position.lerp(targetPosition, 0.06);
+            if (roomRef.current.position.distanceTo(targetPosition) >= 80) {
+                roomRef.current.position.lerp(targetPosition, 0.04);
+            }
+            else {
+                setMousePos([0, 0]);
+                setTriggerTranslate(false);
+                setRoomIndex( (roomIndex + 1) % 2 );
+                roomRef.current.position.copy(new THREE.Vector3(0, 0, 0));
+            }
+            
         }
     })
-
+    
     const markTexture = useLoader(THREE.TextureLoader, './mark.png');
     const markAOTexture = useLoader(THREE.TextureLoader, './mark-ao.png');
-
+    
     return (
         <group>
             <mesh ref={roomRef}>
                 <sphereGeometry args={[props.roomRadius, 60, 40]} />
-                <meshBasicMaterial envMap={texture} side={THREE.BackSide} />
+                <meshBasicMaterial envMap={(roomIndex === 0)? texture1: texture2} side={THREE.BackSide} />
             </mesh>
 
             {/* hidden plane */}
