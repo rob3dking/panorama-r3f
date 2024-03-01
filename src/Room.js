@@ -1,6 +1,7 @@
 import * as THREE from 'three';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useFrame, useLoader, useThree } from "@react-three/fiber";
+import { store } from './store';
 
 export const PanoRoom = (props) => {
     const [roomIndex, setRoomIndex] = useState(0);
@@ -59,7 +60,7 @@ export const PanoRoom = (props) => {
     }
 
     const pointerUpPlane = (e) => {
-        markRef.current.scale.copy(new THREE.Vector3(1, 1, 1));
+        if (markRef.current) markRef.current.scale.copy(new THREE.Vector3(1, 1, 1));
         if ((e.clientX === mousePos[0]) && (e.clientY === mousePos[1])) setTriggerTranslate(true);
     }
 
@@ -84,14 +85,16 @@ export const PanoRoom = (props) => {
         }
 
         if (triggerTranslate) {
-            if (roomRef.current.position.distanceTo(targetPosition) >= 80) {
+            if (roomRef.current.position.distanceTo(targetPosition) >= 100) {
                 roomRef.current.position.lerp(targetPosition, 0.04);
+                store.onBlur = true;
             }
             else {
                 setMousePos([0, 0]);
                 setTriggerTranslate(false);
                 setRoomIndex( (roomIndex + 1) % 2 );
                 roomRef.current.position.copy(new THREE.Vector3(0, 0, 0));
+                store.onBlur = false;
             }
             
         }
