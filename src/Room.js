@@ -23,10 +23,6 @@ export const PanoRoom = (props) => {
         texture2.flipY = -1;
         texture2.mapping = THREE.EquirectangularReflectionMapping;
     }
-    
-
-
-    console.log(THREE.EquirectangularReflectionMapping);
 
     const roomRef = useRef();
     const planeRef = useRef();
