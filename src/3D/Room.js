@@ -1,9 +1,12 @@
 import * as THREE from 'three';
 import { useRef, useState } from 'react';
 import { useFrame, useLoader, useThree } from "@react-three/fiber";
-import { store } from './store';
+import { store } from '../store';
+import { PanoText } from './PanoText';
+import { useSnapshot } from 'valtio';
 
 export const PanoRoom = (props) => {
+    const snap = useSnapshot(store);
     const [roomIndex, setRoomIndex] = useState(0);
     const [triggerTranslate, setTriggerTranslate] = useState(false);
     const [targetPosition, setTargetPosition] = useState(new THREE.Vector3());
@@ -29,7 +32,7 @@ export const PanoRoom = (props) => {
     const markRef = useRef();
 
     const pointerDownPlane = (e) => {
-        if (e.button === 0) {
+        if ((e.button === 0) && !snap.hoverButton) {
             raycaster.setFromCamera(
                 {
                     x: (e.clientX / gl.domElement.clientWidth) * 2 - 1,
@@ -56,12 +59,36 @@ export const PanoRoom = (props) => {
     }
 
     const pointerUpPlane = (e) => {
-        if (markRef.current) markRef.current.scale.copy(new THREE.Vector3(1, 1, 1));
-        if ((e.clientX === mousePos[0]) && (e.clientY === mousePos[1])) setTriggerTranslate(true);
+        if (!snap.hoverButton) {
+            if (markRef.current) markRef.current.scale.copy(new THREE.Vector3(1, 1, 1));
+            if ((e.clientX === mousePos[0]) && (e.clientY === mousePos[1])) setTriggerTranslate(true);
+        }
     }
 
-    const pointerHoverPlane = (e) => {
-        setHoveredPlane(!hoveredPlane);
+    const pointerHoverPlane = (value) => {
+        setHoveredPlane(value);
+    }
+
+    const pointerDownPano = (e) => {
+        if ((e.button === 0) && snap.setPanoText) {
+            raycaster.setFromCamera(
+                {
+                    x: (e.clientX / gl.domElement.clientWidth) * 2 - 1,
+                    y: -(e.clientY / gl.domElement.clientHeight) * 2 + 1,
+                },
+                camera
+            );
+            
+            let intersections = raycaster.intersectObject(scene, true);
+
+            if (intersections.length > 0) {
+                if (intersections[0].object.userData && intersections[0].object.userData === 'pano') {
+                    store.panoTextPosition.push([intersections[0].point.x, intersections[0].point.y, intersections[0].point.z]);
+                    store.setPanoText = false;
+                    store.currentState = 'edit';
+                }
+            }
+        }
     }
 
     useFrame((state) => {
@@ -80,8 +107,8 @@ export const PanoRoom = (props) => {
             }
         }
 
-        if (triggerTranslate) {
-            if (roomRef.current.position.distanceTo(targetPosition) >= 100) {
+        if (triggerTranslate && !snap.hoverButton) {
+            if (roomRef.current.position.distanceTo(targetPosition) >= 120) {
                 roomRef.current.position.lerp(targetPosition, 0.04);
                 store.onBlur = true;
             }
@@ -101,7 +128,10 @@ export const PanoRoom = (props) => {
     
     return (
         <group>
-            <mesh ref={roomRef}>
+            <mesh ref={roomRef} 
+                onPointerDown={pointerDownPano} 
+                userData={'pano'}
+            >
                 <sphereGeometry args={[props.roomRadius, 60, 40]} />
                 <meshBasicMaterial envMap={(roomIndex === 0)? texture1: texture2} side={THREE.BackSide} />
             </mesh>
@@ -114,8 +144,9 @@ export const PanoRoom = (props) => {
                 visible={false} 
                 onPointerDown={pointerDownPlane}
                 onPointerUp={pointerUpPlane}
-                onPointerEnter={pointerHoverPlane}
-                onPointerLeave={pointerHoverPlane}
+                onPointerEnter={() => pointerHoverPlane(true)}
+                onPointerLeave={() => pointerHoverPlane(false)}
+                userData={'plane'}
             >
                 <planeGeometry args={[800, 800]} />
                 <meshBasicMaterial color={'red'} side={THREE.DoubleSide} />
@@ -136,6 +167,11 @@ export const PanoRoom = (props) => {
                     />
                 </group>
             }
+
+            {/* Face Blur Effect */}
+
+            {/* Pano Text */}
+            <PanoText />
         </group>
     )
 }

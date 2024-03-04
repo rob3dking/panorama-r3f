@@ -17,7 +17,7 @@ export function Effects() {
 
     const blendPass = new ShaderPass(BlendShader, 'tDiffuse1')
     blendPass.uniforms['tDiffuse2'].value = savePass.renderTarget.texture
-    blendPass.uniforms['mixRatio'].value = 0.9
+    blendPass.uniforms['mixRatio'].value = 0.8
 
     const outputPass = new ShaderPass(CopyShader)
     composer.addPass(renderPass)

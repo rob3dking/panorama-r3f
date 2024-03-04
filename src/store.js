@@ -1,7 +1,13 @@
 import {proxy} from 'valtio';
 
 const store = proxy({
-    onBlur: false
+    currentState: 'explore',
+    onBlur: false,
+    hoverButton: false,
+    setPanoText: false,
+    panoTextPosition: [],
+    panoText: [],
+
 })
 
 export {store}

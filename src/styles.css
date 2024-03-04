@@ -42,3 +42,9 @@ canvas {
   touch-action: none;
   animation: fade-in 1s ease 0.3s forwards;
 }
+
+.panoText {
+  position: absolute;
+  bottom: 2vh;
+  right: 4vw;
+}

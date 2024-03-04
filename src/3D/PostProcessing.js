@@ -1,6 +1,6 @@
 import { useSnapshot } from "valtio"
 import { Effects } from "./Effects"
-import { store } from "./store"
+import { store } from "../store"
 
 export const PostProcessing = () => {
     const snap = useSnapshot(store);
@@ -8,7 +8,6 @@ export const PostProcessing = () => {
     return (
         snap.onBlur? <Effects />:
         <></>
-
     )
 }
 
