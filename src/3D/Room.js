@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { useRef, useState } from 'react';
 import { useFrame, useLoader, useThree } from "@react-three/fiber";
 import { store } from '../store';
+import {FaceBlur} from './FaceBlur';
 import { PanoText } from './PanoText';
 import { useSnapshot } from 'valtio';
 
@@ -169,6 +170,7 @@ export const PanoRoom = (props) => {
             }
 
             {/* Face Blur Effect */}
+            <FaceBlur />
 
             {/* Pano Text */}
             <PanoText />

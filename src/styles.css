@@ -43,8 +43,14 @@ canvas {
   animation: fade-in 1s ease 0.3s forwards;
 }
 
+.FaceBlur {
+  position: absolute;
+  bottom: 4vh;
+  right: 12vw;
+}
+
 .panoText {
   position: absolute;
-  bottom: 2vh;
+  bottom: 4vh;
   right: 4vw;
 }

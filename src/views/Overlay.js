@@ -4,6 +4,10 @@ import { store } from "../store"
 
 export const UI = () => {
     const snap = useSnapshot(store);
+    const onClickBlur = () => {
+        console.log('blur clicked')
+    }
+
     const onClickComment = () => {
         let value = store.setPanoText;
         store.setPanoText = !store.setPanoText;
@@ -16,12 +20,21 @@ export const UI = () => {
     }
 
     return <div className="container">
+        <div className="FaceBlur">
+            <button 
+                onClick={onClickBlur}
+                onPointerEnter={() => onHoverButton(true)}
+                onPointerLeave={() => onHoverButton(false)}
+            >
+                Add Blur-Effect
+            </button>
+        </div>
         <div className="panoText">
             <button 
                 onClick={onClickComment}
                 onPointerEnter={() => onHoverButton(true)}
                 onPointerLeave={() => onHoverButton(false)}
-                disabled={store.setPanoText}
+                disabled={snap.setPanoText}
             >
                 Add Comment
             </button>
