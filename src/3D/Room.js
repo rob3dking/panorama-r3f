@@ -92,6 +92,7 @@ export const PanoRoom = (props) => {
                     
                     if (snap.setBlurEffect && !snap.hoverButton) {
                         store.blurPositions.push([intersections[0].point.x, intersections[0].point.y, intersections[0].point.z]);
+                        store.setBlurEffect = false;
                     }
                 }
             }

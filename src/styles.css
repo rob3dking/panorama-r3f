@@ -49,6 +49,19 @@ canvas {
   right: 12vw;
 }
 
+.blurEffectSetting {
+  position: absolute;
+  top: 2vh;
+  right: 4vw;
+  color: white;
+  text-align: center;
+
+}
+
+.blurEffectLabel {
+  margin-right: 1vw;
+}
+
 .panoText {
   position: absolute;
   bottom: 4vh;

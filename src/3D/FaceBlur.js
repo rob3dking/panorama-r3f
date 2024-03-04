@@ -17,15 +17,15 @@ export const FaceBlur = () => {
                     key={'positions' + index + Date.now()}
                     position={[position[0], position[1], position[2]]}
                     rotation={[Math.PI / 2, 0, 0]}
-                    scale={200}
+                    scale={snap.blurSize[index]}
                 >
                     <MeshTransmissionMaterial 
                         map={texture}
                         csamples={16} 
                         resolution={128} 
-                        anisotropicBlur={0.8} 
-                        thickness={0.1} 
-                        roughness={0.4} 
+                        anisotropicBlur={snap.blurDensity[index]} 
+                        thickness={snap.blurThickness[index]} 
+                        roughness={snap.blurRoughness[index]} 
                         toneMapped={true} 
                         side={THREE.DoubleSide} 
                         polygonOffset={true} 
