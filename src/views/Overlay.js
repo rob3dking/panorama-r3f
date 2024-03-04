@@ -41,11 +41,13 @@ export const UI = () => {
     }
 
     useEffect(() => {
-        store.blurSize.push(200);
-        store.blurDensity.push(0.8);
-        store.blurRoughness.push(0.4);
-        store.blurThickness.push(0.1);
-    }, [])
+        if (snap.setBlurEffect) {
+            store.blurSize.push(200);
+            store.blurDensity.push(0.8);
+            store.blurRoughness.push(0.4);
+            store.blurThickness.push(0.1);
+        }
+    }, [snap.setBlurEffect])
     return <div className="container">
         <div className="FaceBlur">
             <button 
