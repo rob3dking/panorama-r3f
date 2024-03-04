@@ -20,6 +20,7 @@ export const FaceBlur = () => {
                     scale={200}
                 >
                     <MeshTransmissionMaterial 
+                        map={texture}
                         csamples={16} 
                         resolution={128} 
                         anisotropicBlur={0.8} 
