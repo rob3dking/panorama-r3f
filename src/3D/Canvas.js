@@ -9,8 +9,8 @@ export const App = () => {
 
   return (
     <Canvas shadows eventSource={document.getElementById('root')} eventPrefix="client">
-      <ambientLight intensity={0.2} />
-      <Environment preset='city' />
+      <ambientLight intensity={0.6} />
+      {/* <Environment preset='city' /> */}
       <Controls roomRadius={roomRadius}> 
         <PanoRoom roomRadius={roomRadius}/>
       </Controls>

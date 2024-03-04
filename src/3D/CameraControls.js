@@ -16,7 +16,7 @@ export const Controls = (props) => {
   
     // Pointer Down
     const onPointerDown = ( e ) => {
-      if ( e.isPrimary === false ) return;
+      if ( (e.isPrimary === false)) return;
       interacting = true;
       donwX = e.clientX;
       downY = e.clientY;

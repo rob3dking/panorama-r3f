@@ -71,7 +71,7 @@ export const PanoRoom = (props) => {
     }
 
     const pointerDownPano = (e) => {
-        if ((e.button === 0) && snap.setPanoText) {
+        if ((e.button === 0) && (snap.setPanoText || snap.setBlurEffect)) {
             raycaster.setFromCamera(
                 {
                     x: (e.clientX / gl.domElement.clientWidth) * 2 - 1,
@@ -83,10 +83,16 @@ export const PanoRoom = (props) => {
             let intersections = raycaster.intersectObject(scene, true);
 
             if (intersections.length > 0) {
-                if (intersections[0].object.userData && intersections[0].object.userData === 'pano') {
-                    store.panoTextPosition.push([intersections[0].point.x, intersections[0].point.y, intersections[0].point.z]);
-                    store.setPanoText = false;
-                    store.currentState = 'edit';
+                if ((intersections[0].object.userData && intersections[0].object.userData === 'pano')) {
+                    if (snap.setPanoText) {
+                        store.panoTextPosition.push([intersections[0].point.x, intersections[0].point.y, intersections[0].point.z]);
+                        store.setPanoText = false;
+                        store.currentState = 'edit';
+                    }
+                    
+                    if (snap.setBlurEffect && !snap.hoverButton) {
+                        store.blurPositions.push([intersections[0].point.x, intersections[0].point.y, intersections[0].point.z]);
+                    }
                 }
             }
         }
@@ -135,6 +141,9 @@ export const PanoRoom = (props) => {
             >
                 <sphereGeometry args={[props.roomRadius, 60, 40]} />
                 <meshBasicMaterial envMap={(roomIndex === 0)? texture1: texture2} side={THREE.BackSide} />
+
+                {/* Face Blur Effect */}
+                <FaceBlur />
             </mesh>
 
             {/* hidden plane */}
@@ -168,9 +177,6 @@ export const PanoRoom = (props) => {
                     />
                 </group>
             }
-
-            {/* Face Blur Effect */}
-            <FaceBlur />
 
             {/* Pano Text */}
             <PanoText />

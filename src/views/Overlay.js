@@ -5,7 +5,7 @@ import { store } from "../store"
 export const UI = () => {
     const snap = useSnapshot(store);
     const onClickBlur = () => {
-        console.log('blur clicked')
+        store.setBlurEffect = !store.setBlurEffect;
     }
 
     const onClickComment = () => {
@@ -26,7 +26,7 @@ export const UI = () => {
                 onPointerEnter={() => onHoverButton(true)}
                 onPointerLeave={() => onHoverButton(false)}
             >
-                Add Blur-Effect
+                {snap.setBlurEffect?'Go Explore': 'Add Blur-Effect'}
             </button>
         </div>
         <div className="panoText">
